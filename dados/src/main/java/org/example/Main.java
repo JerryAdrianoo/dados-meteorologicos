@@ -6,20 +6,24 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import java.util.Scanner;
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Digite o nome da cidade");
+
         String cidade = scanner.nextLine();
 
         try{
             String dadosClimaticos = getDadosClimaticos(cidade);
+
             if (dadosClimaticos.contains("\"code\":1006")){
                 System.out.println("Localização não encontrada");
             }
@@ -28,6 +32,9 @@ public class Main {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        finally {
+            scanner.close();
         }
     }
 
@@ -58,15 +65,23 @@ public class Main {
         }
 
         JSONObject informacoesMeteorologicas = dadosJson.getJSONObject("current");
+
         JSONObject local = dadosJson.getJSONObject("location");
 
         String cidade = local.getString("name");
+
         String pais = local.getString("country");
+
         String condicaoTempo = informacoesMeteorologicas.getJSONObject("condition").getString("text");
+
         int umidade = informacoesMeteorologicas.getInt("humidity");
+
         float velocidadeVento = informacoesMeteorologicas.getFloat("wind_kph");
+
         float pressaoAtmosferica = informacoesMeteorologicas.getFloat("pressure_mb");
+
         float temperaturaAtual = informacoesMeteorologicas.getFloat("temp_c");
+
         String dataHoraString = informacoesMeteorologicas.getString("last_updated");
 
         System.out.printf(
@@ -80,6 +95,5 @@ public class Main {
                 cidade, pais, dataHoraString, temperaturaAtual, condicaoTempo, umidade, velocidadeVento, pressaoAtmosferica
         );
     }
-
 
 }
